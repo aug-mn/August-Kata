@@ -15,8 +15,9 @@
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content">
 </Button>
-<WebView
-	android:id="@+id/wv_page"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"/>
+<ImageView 
+	android:id="@+id/main_imageview" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	/>
 </LinearLayout>
