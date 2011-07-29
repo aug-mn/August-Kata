@@ -4,7 +4,10 @@ import java.io.InputStream;
 import java.net.URL;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.ImageView;
 
 public class KataAsynchronicityActivity extends Activity {
 
+	protected static final Void Void = null;
 	ImageView imageView;
 	private String TAG = this.getClass().getName();
 
@@ -27,10 +31,33 @@ public class KataAsynchronicityActivity extends Activity {
 		btn.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				Drawable d = getImage("http://www.google.com/intl/en_com/images/srpr/logo2w.png");
-				imageView.setImageDrawable(d);
+				AsyncNetworkCall anc = new AsyncNetworkCall();
+				anc.execute(Void);
 			}
 		});
+	}
+	
+	class AsyncNetworkCall extends AsyncTask<Void, Void, Void> {
+
+		Drawable d;
+		
+		@Override
+		protected void onPreExecute() {
+			showDialog(1);
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			d = getImage("http://www.google.com/intl/en_com/images/srpr/logo2w.png"); 
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			imageView.setImageDrawable(d);
+			removeDialog(1);
+		}
+		
 	}
 
 	private Drawable getImage(String url) {
@@ -46,6 +73,14 @@ public class KataAsynchronicityActivity extends Activity {
 			Log.d(TAG, "Exception getting image: " + ex.getMessage());
 			return null;
 		}
+	}
+	
+	protected Dialog onCreateDialog(int id) {
+		ProgressDialog dialog = new ProgressDialog(this);
+		dialog.setIndeterminate(true);
+		dialog.setCancelable(true);
+		dialog.setMessage("Loading Image...");
+		return dialog;
 	}
 
 }
