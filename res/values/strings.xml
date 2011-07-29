@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, KataAsynchronicityActivity!</string>
-    <string name="app_name">August-Kata</string>
+    <string name="kata_name">Asynchronicity</string>
+    <string name="app_name">KataAsynchronicity</string>
 </resources>

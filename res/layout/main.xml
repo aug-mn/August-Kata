@@ -7,6 +7,16 @@
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:text="@string/hello"
+    android:text="@string/kata_name"
     />
+<Button 
+	android:id="@+id/btn_load_webview" 
+	android:text="Load Web View" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content">
+</Button>
+<WebView
+	android:id="@+id/wv_page"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"/>
 </LinearLayout>
