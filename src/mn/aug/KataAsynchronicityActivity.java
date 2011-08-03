@@ -27,8 +27,21 @@ public class KataAsynchronicityActivity extends Activity {
 		btn.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				Drawable d = getImage("http://www.google.com/intl/en_com/images/srpr/logo2w.png");
-				imageView.setImageDrawable(d);
+				
+				Thread worker = new Thread(new Runnable() {
+					public void run() {
+						final Drawable d = getImage("http://www.google.com/intl/en_com/images/srpr/logo2w.png");
+						imageView.post(new Runnable() {
+							
+							public void run() {
+								imageView.setImageDrawable(d);
+							}
+						});
+					}
+				});
+				
+				worker.start();
+				
 			}
 		});
 	}
