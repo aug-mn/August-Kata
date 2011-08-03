@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,14 +16,21 @@ import android.widget.ImageView;
 
 public class KataAsynchronicityActivity extends Activity {
 
+    private boolean mDownloading = false;
 	ImageView imageView;
 	private String TAG = this.getClass().getName();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setProgressBarIndeterminateVisibility(false);
+		if(savedInstanceState != null && savedInstanceState.getBoolean("isDownloading", false)) {
+		    setProgressBarIndeterminateVisibility(true);
+		    requestImage();
+		} else {
+		    setProgressBarIndeterminateVisibility(false);
+		}
 		
 		setContentView(R.layout.main);
 		
@@ -34,35 +40,43 @@ public class KataAsynchronicityActivity extends Activity {
 		btn.setOnClickListener(new OnClickListener() {
 
             public void onClick(View v) {
-                new AsyncTask<String, Void, Drawable>() {
-                    
-                    @Override
-                    protected void onPreExecute() {
-                        setProgressBarIndeterminateVisibility(true);
-                    }
-
-                    @Override
-                    protected void onProgressUpdate(Void... values) {
-                    }
-
-                    @Override
-                    protected Drawable doInBackground(String... params) {
-                        Drawable d = getImage(params[0]);
-                        return d;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Drawable result) {
-                        setProgressBarIndeterminateVisibility(false);
-                        imageView.setImageDrawable(result);
-                    }
-                    
-                }.execute("http://www.google.com/intl/en_com/images/srpr/logo2w.png");
+                requestImage();
             }
 		});
 	}
 
-	private Drawable getImage(String url) {
+    private void requestImage() {
+        new AsyncTask<String, Void, Drawable>() {
+
+            @Override
+            protected void onPreExecute() {
+                mDownloading = true;
+                setProgressBarIndeterminateVisibility(true);
+            }
+
+            @Override
+            protected Drawable doInBackground(String... params) {
+                Drawable d = getImage(params[0]);
+                return d;
+            }
+
+            @Override
+            protected void onPostExecute(Drawable result) {
+                setProgressBarIndeterminateVisibility(false);
+                imageView.setImageDrawable(result);
+                mDownloading = false;
+            }
+            
+        }.execute("http://www.google.com/intl/en_com/images/srpr/logo2w.png");
+    }
+
+	@Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("isDownloading", mDownloading);
+    }
+
+    private Drawable getImage(String url) {
 		try {
 			// simulate slow network traffic..
 			Thread.sleep(2000);
