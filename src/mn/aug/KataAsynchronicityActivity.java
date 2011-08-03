@@ -11,8 +11,10 @@ import android.widget.ProgressBar;
 public class KataAsynchronicityActivity extends Activity {
 
 	ImageView imageView;
-	
+
 	ProgressBar mProgressBar;
+
+	DownloadTask downloadTask;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -26,10 +28,20 @@ public class KataAsynchronicityActivity extends Activity {
 		btn.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				(new DownloadTask(imageView, mProgressBar)).execute("http://www.google.com/intl/en_com/images/srpr/logo2w.png");
+				downloadTask = new DownloadTask(imageView, mProgressBar);
+				downloadTask.execute("http://www.google.com/intl/en_com/images/srpr/logo2w.png");
 			}
 		});
+
+		downloadTask = (DownloadTask) getLastNonConfigurationInstance();
+		if (downloadTask != null) {
+			downloadTask.setViews(imageView, mProgressBar);
+		}
 	}
 
-	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return downloadTask;
+	}
+
 }

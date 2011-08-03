@@ -27,6 +27,18 @@ class DownloadTask extends AsyncTask<String, Void, Drawable> {
 		this.imageView = imageView;
 		this.progressBar = progressBar;
 	}
+	
+	public void setViews(ImageView imageView, ProgressBar progressBar) {
+		this.imageView = imageView;
+		this.progressBar = progressBar;
+		
+		if (getStatus() == Status.RUNNING) {
+			this.progressBar.setVisibility(View.VISIBLE);
+		}
+		else {
+			this.progressBar.setVisibility(View.GONE);
+		}
+	}
 
 	@Override
 	protected void onPreExecute() {
